@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 JUNK1=/tmp/junk1.txt
 JUNK2=/tmp/junk2.txt
 
