@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# adsfafafa
+#PROD_SRVS=(L4DVEPAP2789 L4DVEPAP2790 L4DVEPAP2791 L4DVEPAP2792 L4DVIPAP2788 l98vepap2898 l98vepap2899 l98vepap2901 l98vepap2902 l98vipap2897 L4DVIPAP2788)
 
 JUNK1=/tmp/junk1.txt
 JUNK2=/tmp/junk2.txt
@@ -21,9 +20,22 @@ JUNK2=/tmp/junk2.txt
         OUTPUT=`grep -i -E "warning.*artifact|severe" $CATALINA > $JUNK1`
     fi
 
-NUM_OCCURRENCES=`wc -l $JUNK1 | cut -d' ' -f 1`
+# checksrvcycle() {
+      PROD_SRVS=(xuxu NAMIdp.novell.com NAMAG.novell.com bunda)
+      QC_SRVS=(L4dveqap2744 L4dveqap2745 L4dveqap2746 L4dveqap2747 L4dviqap2750)
+      for i in ${PROD_SRVS[@]}; do
+        if [[ $i == $HOSTNAME ]]; then
+        PLATFORM="PROD $PLATFORM"
+        fi
+      done
+      for i in ${QC_SRVS[@]}; do
+        if [[ $i == $HOSTNAME ]]; then
+        PLATFORM="QC $PLATFORM"
+        fi
+      done
+# }
 
-#echo $OUTPUT > $JUNK1
+NUM_OCCURRENCES=`wc -l $JUNK1 | cut -d' ' -f 1`
 
 cmp -s $JUNK1 $JUNK2
 
