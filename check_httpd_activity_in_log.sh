@@ -18,7 +18,6 @@ exit_status=''
     gunzip < $last_archive_gz > $last_archive
     cat $error_log > $error_log_tmp
     cat $error_log_tmp >> $last_archive
-    read -p "press enter"
     csplit -f $log_dir/error_log_tmp $last_archive "$csplit_date"
     exit_status=$?
     rm -f $last_archive
