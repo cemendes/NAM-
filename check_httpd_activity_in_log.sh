@@ -20,7 +20,7 @@ exit_status=''
     cat $error_log_tmp >> $last_archive
     csplit -f $log_dir/error_log_tmp $last_archive "$csplit_date"
     exit_status=$?
-    rm -f $last_archive
+    rm -f $last_archive $error_log_tmp
 
 
 # #if the cmd above fails, look in the latest archive created
@@ -57,6 +57,7 @@ done
 ##Cleaning up
 rm -f /var/opt/novell/Apache_logs/error_log_tmp01
 rm -f /var/opt/novell/Apache_logs/error_log_tmp00
+rm -f $last_archive $error_log_tmp
 
 
 echo "######################################################" >> $log
