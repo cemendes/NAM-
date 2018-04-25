@@ -6,23 +6,30 @@ log=/apps/NetIQ/log/check_httpd_activity_in_log.log
 tmp_error_log=/var/opt/novell/Apache_logs/error_log_tmp01
 count=0
 error_log=/var/opt/novell/Apache_logs/error_log
+error_log_tmp=$error_log\_tmp
 log_dir=/var/opt/novell/Apache_logs
 last_archive_gz=$(ls -tr /var/opt/novell/Apache_logs/error_log-20*.gz | tail -1)
 last_archive=$(echo ${last_archive_gz%???})
 exit_status=''
 
 
-## Create a new error_log with only the last 30 minutes of activity
-csplit -f $log_dir/error_log_tmp $error_log "$csplit_date"
+## Merge actual error_log and its latest archive and create a new file with only the last 30 minutes of activity
 
-#if the cmd above fails, look in the latest archive created
-if [[ $? = 1 ]]; then
     gunzip < $last_archive_gz > $last_archive
+    cat $error_log > $error_log_tmp
+    cat $error_log_tmp >> $last_archive
+    read -p "press enter"
     csplit -f $log_dir/error_log_tmp $last_archive "$csplit_date"
     exit_status=$?
     rm -f $last_archive
 
-fi
+
+# #if the cmd above fails, look in the latest archive created
+# if [[ $? = 1 ]]; then
+#     gunzip < $last_archive_gz > $last_archive
+#     csplit -f $log_dir/error_log_tmp $last_archive "$csplit_date"
+#     exit_status=$?
+#     rm -f $last_archive
 
 if [[ $exit_status = 1 ]]; then
     #statements
@@ -38,7 +45,6 @@ fi
 #echo "There are $httpd_process_count httpd processes running on this box"
 
 for i in $(pgrep -f /opt/novell/apache2/sbin/httpd -u wwwrun); do
-        thread_count=`ps huH -p $i | wc -l`
                 tac $tmp_error_log | fgrep -m1  "[$i" > /dev/null 2>&1
                 ctrl=$?
                  if [[ "$(($ctrl))" -eq "1" ]]; then
